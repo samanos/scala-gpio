@@ -16,4 +16,5 @@ libraryDependencies ++= Seq(
 enablePlugins(GitVersioning)
 git.useGitDescribe := true
 
+bintrayOrganization := Some("samanos")
 licenses := Seq("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0"))
