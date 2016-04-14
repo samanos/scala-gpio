@@ -47,6 +47,7 @@ trait Gpio {
   def direction(port: Port, direction: Direction): Unit
   def value(port: Port, value: String): Unit
   def led(port: Port, on: Boolean): Unit
+  def relay(port: Port, on: Boolean): Unit
   def temperature: Iterator[Double]
 }
 
@@ -81,6 +82,12 @@ class Rpi1Gpio(conf: Config) extends Gpio {
     value(port, if (on) "1" else "0")
   }
 
+  def relay(port: Port, on: Boolean) = {
+    export(port)
+    direction(port, Out)
+    value(port, if (on) "0" else "1")
+  }
+
   def temperature = {
     val matcher = OneWire.toFile.pathMatcher(File.PathMatcherSyntax.glob)("**/w1_slave")
     OneWire.toFile.walk(maxDepth=2)(File.VisitOptions.follow).filter(file => matcher.matches(file.path)).flatMap { sensor =>
@@ -100,5 +107,6 @@ class ConsoleGpio(conf: Config) extends Gpio {
   def direction(port: Port, direction: Direction) = println(s"Changing $port direction to $direction")
   def value(port: Port, value: String) = println(s"Changing $port value to $value")
   def led(port: Port, on: Boolean) = println(s"Turning led $port to $on")
+  def relay(port: Port, on: Boolean) = println(s"Turning relay $port to $on")
   def temperature = Vector.fill(2)(20 + scala.math.random).toIterator
 }
