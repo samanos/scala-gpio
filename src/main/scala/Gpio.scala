@@ -33,10 +33,10 @@ object Gpio {
     val In = Value("in")
   }
 
-  def apply()(implicit sys: ActorSystem) =
+  def apply(configPrefix: String = "gpio.rpi1")(implicit sys: ActorSystem) =
     sys.asInstanceOf[ExtendedActorSystem].dynamicAccess.createInstanceFor[Gpio](
-      sys.settings.config.getString("tlog.gpio.class"),
-      Vector(classOf[Config] -> sys.settings.config.getConfig("tlog.gpio"))).get
+      sys.settings.config.getString(s"$configPrefix.class"),
+      Vector(classOf[Config] -> sys.settings.config.getConfig(configPrefix))).get
 }
 
 trait Gpio {
